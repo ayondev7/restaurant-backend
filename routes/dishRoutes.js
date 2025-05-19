@@ -21,6 +21,6 @@ const upload = multer({
 });
 
 router.post('/create-dish', upload.single('image'), dishController.createDish);
-router.get('/gell-all-dishes', dishController.getAllDishes);
+router.get('/get-all-dishes', dishController.getAllDishes);
 
 module.exports = router;
