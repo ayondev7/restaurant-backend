@@ -48,9 +48,9 @@ exports.getAllDishes = async (req, res) => {
     const dishes = await Dish.aggregate([
       {
         $lookup: {
-          from: "categories", // your categories collection name
-          localField: "category", // reference field in Dish
-          foreignField: "_id", // id field in categories
+          from: "categories", 
+          localField: "category", 
+          foreignField: "_id", 
           as: "categoryInfo",
         },
       },
@@ -66,7 +66,7 @@ exports.getAllDishes = async (req, res) => {
           price: 1,
           description: 1,
           image: 1,
-          category: "$categoryInfo.name", // send category name as 'category'
+          category: "$categoryInfo.name", 
         },
       },
     ]);
