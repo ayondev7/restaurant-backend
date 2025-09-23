@@ -7,7 +7,22 @@ const categoryRoutes = require('./routes/categoryRoutes');
 
 const app = express();
 
-app.use(cors());
+const allowedOriginsEnv = process.env.ALLOWED_ORIGINS || '';
+const allowedOrigins = allowedOriginsEnv.split(',').map(o => o.trim()).filter(Boolean);
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.length === 0) {
+      return callback(new Error('CORS policy: No allowed origins configured'));
+    }
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('CORS policy: Origin not allowed'));
+    }
+  }
+}));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
