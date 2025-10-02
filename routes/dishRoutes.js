@@ -7,16 +7,16 @@ const path = require('path');
 const storage = multer.memoryStorage();
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 3 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const filetypes = /jpeg|jpg|png/;
+    const filetypes = /jpeg|jpg|png|webp/;
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = filetypes.test(file.mimetype);
     
     if (extname && mimetype) {
       return cb(null, true);
     }
-    cb(new Error('Only JPEG/PNG images are allowed'));
+    cb(new Error('Only JPEG/JPG/PNG/WebP images are allowed'));
   }
 });
 

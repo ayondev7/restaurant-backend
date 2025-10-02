@@ -1,6 +1,7 @@
 const Dish = require("../models/Dish");
 const Category = require("../models/Category");
 const { body, validationResult } = require("express-validator");
+const { processAndUploadImage } = require("../utils/imageUtils");
 
 exports.createDish = [
   body("name").trim().notEmpty().withMessage("Name is required"),
@@ -25,7 +26,7 @@ exports.createDish = [
       const dish = new Dish({
         name: req.body.name,
         category: category._id,
-        image: req.file.buffer,
+        image: await processAndUploadImage(req.file.buffer, req.file.originalname),
       });
 
       await dish.save();
@@ -71,14 +72,7 @@ exports.getAllDishes = async (req, res) => {
       },
     ]);
 
-    const dishesWithImages = dishes.map((dish) => ({
-      ...dish,
-      image: dish.image
-        ? `data:image/jpeg;base64,${dish.image.toString("base64")}`
-        : null,
-    }));
-
-    res.status(200).json(dishesWithImages);
+    res.status(200).json(dishes);
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }
